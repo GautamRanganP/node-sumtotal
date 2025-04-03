@@ -97,7 +97,7 @@ function calculateDates(currentDate) {
 }
 
 app.get('/', async (req, res) => {
-    res.status(200).send("welcome to Sever");
+    res.status(200).send("welcome to Server");
 })
 app.get('/getactivities', async (req, res) => {
 
