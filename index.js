@@ -161,6 +161,8 @@ async function replaceDocument(data) {
     }
 }
 
+module.exports = app;
+
 // Start the server
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
