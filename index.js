@@ -5,7 +5,7 @@ require('dotenv').config();
 const cors = require('cors');
 
 const app = express();
-
+app.use(express.json());
 
 const allowedOrigins = [
     process.env.STAGE_URL,
@@ -39,7 +39,6 @@ admin.initializeApp({
   databaseURL: 'https://sumtotal-backend.firebaseio.com'
 });
 const db = admin.firestore();
-
 const docRef = db.collection("activities").doc("trainingrecords");
 let accessToken = null; // Store the token in memory
 
