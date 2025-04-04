@@ -73,30 +73,6 @@ app.post('/auth/client-credentials', async (req, res) => {
 
 
 
-const currentDate = new Date();
-function getLastDayOfMonth(year, month) {
-    return new Date(year, month + 1, 0); // Month + 1, day 0 gives the last day of the month
-}
-
-function calculateDates(currentDate) {
-    const year = currentDate.getFullYear();
-    const currentMonth = currentDate.getMonth();
-    const midDate = new Date(year, currentMonth, 15); // Mid-date of the current month
-
-    let startDate = new Date(year, currentMonth, 1); // Start of the current month
-    let endDate;
-
-    if (currentDate < midDate) {
-        // If before mid-date, end date is the last day of the current month
-        endDate = getLastDayOfMonth(year, currentMonth);
-    } else {
-        // If mid-date or later, end date is the last day of the next month
-        endDate = getLastDayOfMonth(year, currentMonth + 1);
-    }
-
-    return { startDate, endDate };
-}
-
 app.get('/', async (req, res) => {
     res.status(200).send("welcome to Server");
 })
@@ -118,11 +94,14 @@ app.get('/getactivities', async (req, res) => {
   app.get('/updateactivities', async (req, res) => {
     console.log("token:",accessToken)
     // Calculate start and end dates dynamically
-    const { startDate, endDate } = calculateDates(currentDate);
+
+  const startDate = "2025-01-01T00:00:00.000Z"
+  const endDate   = "2025-12-28T00:00:00.000Z"
+    // const { startDate, endDate } = calculateDates(currentDate);
 
     let payload = {
-      startDate: startDate.toISOString(),
-      endDate: endDate.toISOString(),
+      startDate: startDate,
+      endDate: endDate,
     };
     try {
       if (!accessToken) {
@@ -137,11 +116,11 @@ app.get('/getactivities', async (req, res) => {
         body: JSON.stringify(payload),
       });
       if (!response.ok) {
-      throw new Error(`Response status: ${response.status}`);
+        throw new Error(`Response status: ${response.status}`);
       }
       const json = await response.json();
 
-      replaceDocument(json);
+      // replaceDocument(json);
       res.status(200).send(json);
       
       } catch (error) {
@@ -152,14 +131,39 @@ app.get('/getactivities', async (req, res) => {
   
   });
  
-async function replaceDocument(data) {
-    try {
-        await docRef.delete();
-        console.log("Document successfully deleted");
-        await docRef.set(data);
-        console.log("Document successfully recreated with new data");
-    } catch (error) {
-        console.error("Error processing document:", error);
-    }
-}
+// async function replaceDocument(data) {
+//     try {
+//         await docRef.delete();
+//         console.log("Document successfully deleted");
+//         await docRef.set(data);
+//         console.log("Document successfully recreated with new data");
+//     } catch (error) {
+//         console.error("Error processing document:", error);
+//     }
+// }
+
+// const currentDate = new Date();
+// function getLastDayOfMonth(year, month) {
+//     return new Date(year, month + 1, 0); // Month + 1, day 0 gives the last day of the month
+// }
+
+// function calculateDates(currentDate) {
+//     const year = currentDate.getFullYear();
+//     const currentMonth = currentDate.getMonth();
+//     const midDate = new Date(year, currentMonth, 15); // Mid-date of the current month
+
+//     let startDate = new Date(year, currentMonth, 1); // Start of the current month
+//     let endDate;
+
+//     if (currentDate < midDate) {
+//         // If before mid-date, end date is the last day of the current month
+//         endDate = getLastDayOfMonth(year, currentMonth);
+//     } else {
+//         // If mid-date or later, end date is the last day of the next month
+//         endDate = getLastDayOfMonth(year, currentMonth + 1);
+//     }
+
+//     return { startDate, endDate };
+// }
+
 module.exports = app;
