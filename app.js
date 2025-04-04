@@ -77,7 +77,18 @@ app.post('/auth/client-credentials', async (req, res) => {
 
 
 app.get('/', async (req, res) => {
-    res.status(200).send("welcome to Server");
+  try {
+    let data = {} ;
+    let json = await docRef.get()
+    if(json.exists){
+      data = json.data()
+    }
+    res.status(200).send(data);
+  }
+  catch (error) {
+    res.status(500).send({ error: 'Failed to access external API' });
+  }
+    // res.status(200).send("welcome to Server");
 })
 app.get('/getactivities', async (req, res) => {
 
