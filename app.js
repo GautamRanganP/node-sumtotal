@@ -9,25 +9,22 @@ const app = express();
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json())
 
-// const allowedOrigins = [
-//     process.env.STAGE_URL,
-//     process.env.PRODUCTION_URL
-//   ];
+const allowedOrigins = [
+    process.env.STAGE_URL,
+    process.env.PRODUCTION_URL
+  ];
    
-//   const corsOptions = {
-//       origin: function (origin, callback) {
-//           if (!origin || allowedOrigins.includes(origin)) {
-//               callback(null, true);
-//           } else {
-//               callback(new Error("Not allowed by CORS"));
-//           }
-//       }
-//   };
+  const corsOptions = {
+      origin: function (origin, callback) {
+          if (!origin || allowedOrigins.includes(origin)) {
+              callback(null, true);
+          } else {
+              callback(new Error("Not allowed by CORS"));
+          }
+      }
+  };
    
-const corsOptions = {
-  origin: '*', // Allow all origins
-};
-  app.use(cors(corsOptions));
+app.use(cors(corsOptions));
 
 admin.initializeApp({
   credential: admin.credential.cert({
@@ -46,6 +43,44 @@ admin.initializeApp({
 const db = admin.firestore();
 const docRef = db.collection("activities").doc("trainingrecords");
 let accessToken = null; // Store the token in memory
+
+
+const currentDate = new Date();
+function getLastDayOfMonth(year, month) {
+    return new Date(year, month + 1, 0); // Month + 1, day 0 gives the last day of the month
+}
+
+async function replaceDocument(data) {
+    try {
+        await docRef.delete();
+        console.log("Document successfully deleted");
+        await docRef.set(data);
+        console.log("Document successfully recreated with new data");
+    } catch (error) {
+        console.error("Error processing document:", error);
+    }
+}
+
+
+function calculateDates(currentDate) {
+    const year = currentDate.getFullYear();
+    const currentMonth = currentDate.getMonth();
+    const midDate = new Date(year, currentMonth, 15); // Mid-date of the current month
+    let startDate = new Date(year, currentMonth, 1); // Start of the current month
+    let endDate;
+
+    if (currentDate < midDate) {
+        // If before mid-date, end date is the last day of the current month
+        endDate = getLastDayOfMonth(year, currentMonth);
+    } else {
+        // If mid-date or later, end date is the last day of the next month
+        endDate = getLastDayOfMonth(year, currentMonth + 1);
+    }
+
+    return { startDate, endDate };
+}
+
+
 // Endpoint to authenticate using client credentials
 app.post('/auth/client-credentials', async (req, res) => {
   try {
@@ -145,40 +180,6 @@ app.get('/getactivities', async (req, res) => {
       }
   });
  
-// async function replaceDocument(data) {
-//     try {
-//         await docRef.delete();
-//         console.log("Document successfully deleted");
-//         await docRef.set(data);
-//         console.log("Document successfully recreated with new data");
-//     } catch (error) {
-//         console.error("Error processing document:", error);
-//     }
-// }
-
-// const currentDate = new Date();
-// function getLastDayOfMonth(year, month) {
-//     return new Date(year, month + 1, 0); // Month + 1, day 0 gives the last day of the month
-// }
-
-// function calculateDates(currentDate) {
-//     const year = currentDate.getFullYear();
-//     const currentMonth = currentDate.getMonth();
-//     const midDate = new Date(year, currentMonth, 15); // Mid-date of the current month
-
-//     let startDate = new Date(year, currentMonth, 1); // Start of the current month
-//     let endDate;
-
-//     if (currentDate < midDate) {
-//         // If before mid-date, end date is the last day of the current month
-//         endDate = getLastDayOfMonth(year, currentMonth);
-//     } else {
-//         // If mid-date or later, end date is the last day of the next month
-//         endDate = getLastDayOfMonth(year, currentMonth + 1);
-//     }
-
-//     return { startDate, endDate };
-// }
 app.use((err, req, res, next) => {
   console.error(err.stack);
   res.status(500).send({ error: 'Something went wrong!' });
