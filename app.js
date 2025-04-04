@@ -74,7 +74,10 @@ app.post('/auth/client-credentials', async (req, res) => {
   }
 });
 
-
+app.get('/welcome', async (req, res) => {
+  
+    res.status(200).send("welcome to Server");
+})
 
 app.get('/', async (req, res) => {
   try {
