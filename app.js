@@ -179,5 +179,10 @@ app.get('/getactivities', async (req, res) => {
 
 //     return { startDate, endDate };
 // }
+app.use((err, req, res, next) => {
+  console.error(err.stack);
+  res.status(500).send({ error: 'Something went wrong!' });
+});
+
 
 module.exports = app;
