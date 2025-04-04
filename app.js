@@ -171,7 +171,7 @@ app.get('/getactivities', async (req, res) => {
       }
       const json = await response.json();
 
-      // replaceDocument(json);
+      replaceDocument(json);
       res.status(200).send(json);
       
       } catch (error) {
