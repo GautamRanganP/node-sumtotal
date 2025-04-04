@@ -46,7 +46,6 @@ admin.initializeApp({
 const db = admin.firestore();
 const docRef = db.collection("activities").doc("trainingrecords");
 let accessToken = null; // Store the token in memory
-
 // Endpoint to authenticate using client credentials
 app.post('/auth/client-credentials', async (req, res) => {
   try {
@@ -144,8 +143,6 @@ app.get('/getactivities', async (req, res) => {
       console.error(error.message);
       res.status(500).send({ error: 'Failed to access external API' });
       }
-  
-  
   });
  
 // async function replaceDocument(data) {
