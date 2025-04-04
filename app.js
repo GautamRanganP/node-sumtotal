@@ -9,21 +9,24 @@ const app = express();
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json())
 
-const allowedOrigins = [
-    process.env.STAGE_URL,
-    process.env.PRODUCTION_URL
-  ];
+// const allowedOrigins = [
+//     process.env.STAGE_URL,
+//     process.env.PRODUCTION_URL
+//   ];
    
-  const corsOptions = {
-      origin: function (origin, callback) {
-          if (!origin || allowedOrigins.includes(origin)) {
-              callback(null, true);
-          } else {
-              callback(new Error("Not allowed by CORS"));
-          }
-      }
-  };
+//   const corsOptions = {
+//       origin: function (origin, callback) {
+//           if (!origin || allowedOrigins.includes(origin)) {
+//               callback(null, true);
+//           } else {
+//               callback(new Error("Not allowed by CORS"));
+//           }
+//       }
+//   };
    
+const corsOptions = {
+  origin: '*', // Allow all origins
+};
   app.use(cors(corsOptions));
 
 admin.initializeApp({
