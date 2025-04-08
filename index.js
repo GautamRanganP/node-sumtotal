@@ -9,13 +9,12 @@ const PORT = 3000
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json())
 
-const allowedOrigin = [
-    process.env.PRODUCTION_URL
-  ];
+const corsOptions = {
+    origin: process.env.PRODUCTION_URL,
+};
+
+app.use(cors(corsOptions));
    
-  app.use(cors({
-    origin: allowedOrigin
-}));
   // const corsOptions = {
   //     origin: function (origin, callback) {
   //         if (!origin || allowedOrigins.includes(origin)) {
