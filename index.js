@@ -124,12 +124,12 @@ app.get('/getactivities', async (req, res) => {
 })
 
   app.get('/updateactivities', async (req, res) => {
+    const activityDescription = req.query.category
     console.log("token:",accessToken)
     // Calculate start and end dates dynamically
 
   const startDate = "2025-01-01T00:00:00.000Z"
   const endDate   = "2025-12-28T00:00:00.000Z"
-  const activityDescription = "ARVILT"
     // const { startDate, endDate } = calculateDates(currentDate);
 
     let payload = {
