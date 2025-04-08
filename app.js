@@ -5,7 +5,7 @@ const admin = require('firebase-admin');
 require('dotenv').config();
 const cors = require('cors');
 const app = express();
-
+const PORT = 3000
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json())
 
@@ -43,7 +43,6 @@ admin.initializeApp({
 const db = admin.firestore();
 const docRef = db.collection("activities").doc("trainingrecords");
 let accessToken = null; // Store the token in memory
-
 
 const currentDate = new Date();
 function getLastDayOfMonth(year, month) {
@@ -107,25 +106,8 @@ app.post('/auth/client-credentials', async (req, res) => {
     res.status(500).send({ error: 'Failed to authenticate using client credentials' });
   }
 });
-
-app.get('/welcome', async (req, res) => {
-  
-    res.status(200).send("welcome to Server");
-})
-
 app.get('/', async (req, res) => {
-  try {
-    let data = {} ;
-    let json = await docRef.get()
-    if(json.exists){
-      data = json.data()
-    }
-    res.status(200).send(data);
-  }
-  catch (error) {
-    res.status(500).send({ error: 'Failed to access external API' });
-  }
-    // res.status(200).send("welcome to Server");
+  res.status(200).send("welcome to Server");
 })
 app.get('/getactivities', async (req, res) => {
 
@@ -187,3 +169,6 @@ app.use((err, req, res, next) => {
 
 
 module.exports = app;
+
+
+app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
