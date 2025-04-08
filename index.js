@@ -129,11 +129,13 @@ app.get('/getactivities', async (req, res) => {
 
   const startDate = "2025-01-01T00:00:00.000Z"
   const endDate   = "2025-12-28T00:00:00.000Z"
+  const activityDescription = "ARVILT"
     // const { startDate, endDate } = calculateDates(currentDate);
 
     let payload = {
       startDate: startDate,
       endDate: endDate,
+      activityDescription: activityDescription
     };
     try {
       if (!accessToken) {
