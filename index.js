@@ -117,15 +117,11 @@ app.get('/getactivities', async (req, res) => {
       }
       const json = await response.json();
 
-      try {
-        await docRef.delete();
-        console.log("Document successfully deleted");
-        await docRef.set(json);
-        console.log("Document successfully recreated with new data");
-    } catch (error) {
-        console.error("Error processing document:", error);
-    }
-      res.status(200).send(json);
+      await docRef.delete();
+      console.log("Document successfully deleted");
+      await docRef.set(json);
+      console.log("Document successfully recreated with new data");
+      res.status(200).send(json)
       
       } catch (error) {
       console.error(error.message);
