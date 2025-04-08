@@ -9,20 +9,22 @@ const PORT = 3000
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json())
 
-const allowedOrigins = [
-    process.env.STAGE_URL,
+const allowedOrigin = [
     process.env.PRODUCTION_URL
   ];
    
-  const corsOptions = {
-      origin: function (origin, callback) {
-          if (!origin || allowedOrigins.includes(origin)) {
-              callback(null, true);
-          } else {
-              callback(new Error("Not allowed by CORS"));
-          }
-      }
-  };
+  app.use(cors({
+    origin: allowedOrigin
+}));
+  // const corsOptions = {
+  //     origin: function (origin, callback) {
+  //         if (!origin || allowedOrigins.includes(origin)) {
+  //             callback(null, true);
+  //         } else {
+  //             callback(new Error("Not allowed by CORS"));
+  //         }
+  //     }
+  // };
    
 app.use(cors(corsOptions));
 
@@ -70,9 +72,7 @@ app.post('/auth/client-credentials', async (req, res) => {
     res.status(500).send({ error: 'Failed to authenticate using client credentials' });
   }
 });
-app.get('/', async (req, res) => {
-  res.status(200).send("welcome to Server");
-})
+
 app.get('/getactivities', async (req, res) => {
 
   try {
