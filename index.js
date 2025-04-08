@@ -116,7 +116,7 @@ app.get('/getactivities', async (req, res) => {
     if(json.exists){
       data = json.data()
     }
-    res.status(200).send(data);
+    res.status(200).json(data);
   }
   catch (error) {
     res.status(500).send({ error: 'Failed to access external API' });
