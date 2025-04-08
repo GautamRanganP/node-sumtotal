@@ -41,6 +41,8 @@ admin.initializeApp({
   databaseURL: process.env.DATABASE_URL
 });
 let accessToken = null; // Store the token in memory
+const db = admin.firestore();
+const docRef = db.collection("activities").doc("trainingrecords");
 
 // Endpoint to authenticate using client credentials
 app.post('/auth/client-credentials', async (req, res) => {
@@ -87,9 +89,7 @@ app.get('/getactivities', async (req, res) => {
 })
 
   app.get('/updateactivities', async (req, res) => {
-    const db = admin.firestore();
-    const docRef = db.collection("activities").doc("trainingrecords");
-
+    
     const activityDescription = req.query.category
     console.log("token:",accessToken)
     const startDate = "2025-01-01T00:00:00.000Z"
